@@ -1,0 +1,103 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+if (flutterVersionCode == null) {
+    flutterVersionCode = "1"
+}
+
+def flutterVersionName = localProperties.getProperty("flutter.versionName")
+if (flutterVersionName == null) {
+    flutterVersionName = "1.0"
+}
+
+def cocaColaKeystoreProperties = new Properties()
+cocaColaKeystoreProperties.load(new FileInputStream(rootProject.file('properties/coca_cola/keystore.properties')))
+
+def fantaKeystoreProperties = new Properties()
+fantaKeystoreProperties.load(new FileInputStream(rootProject.file('properties/fanta/keystore.properties')))
+
+def pepsiKeystoreProperties = new Properties()
+pepsiKeystoreProperties.load(new FileInputStream(rootProject.file('properties/pepsi/keystore.properties')))
+
+android {
+    namespace = "com.demo.branding"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+        }
+    }
+
+    signingConfigs {
+        cocacola {
+            keyAlias cocaColaKeystoreProperties['keyAlias']
+            keyPassword cocaColaKeystoreProperties['keyPassword']
+            storeFile file(cocaColaKeystoreProperties['storeFile'])
+            storePassword cocaColaKeystoreProperties['storePassword']
+        }
+
+        fanta {
+            keyAlias fantaKeystoreProperties['keyAlias']
+            keyPassword fantaKeystoreProperties['keyPassword']
+            storeFile file(fantaKeystoreProperties['storeFile'])
+            storePassword fantaKeystoreProperties['storePassword']
+        }
+
+        pepsi {
+            keyAlias pepsiKeystoreProperties['keyAlias']
+            keyPassword pepsiKeystoreProperties['keyPassword']
+            storeFile file(pepsiKeystoreProperties['storeFile'])
+            storePassword pepsiKeystoreProperties['storePassword']
+        }
+    }
+
+    flavorDimensions "app"
+    productFlavors {
+        cocacola {
+            dimension "app"
+            applicationId "com.demo.cocacola"
+            signingConfig signingConfigs.cocacola
+        }
+        fanta {
+            dimension "app"
+            applicationId "com.demo.fanta"
+            signingConfig signingConfigs.fanta
+        }
+        pepsi {
+            dimension "app"
+            applicationId "com.demo.pepsi"
+            signingConfig signingConfigs.pepsi
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}

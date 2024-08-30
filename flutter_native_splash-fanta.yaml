@@ -1,0 +1,6 @@
+flutter_native_splash:
+  color: "#FF8300"
+  image: images/fanta/splash.png
+  android_12:
+    color: "#FF8300"
+    image: images/fanta/splash.png
